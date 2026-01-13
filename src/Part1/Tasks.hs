@@ -1,14 +1,22 @@
 module Part1.Tasks where
 
-import Util(notImplementedYet)
+taylor x term n acc eps =
+  let next = (-term) * (x ^ 2) / ((n+1) * (n+2)) in
+  if abs term <= eps then acc
+  else taylor x next (n+2) (acc+term) eps
+
+normalize x =
+  let pi2 = 2 * pi in
+  let x' = x - pi2 * (fromIntegral . floor $ (x / pi2)) in
+  if x' > pi then x' - pi2 else x'
 
 -- синус числа (формула Тейлора)
 mySin :: Double -> Double
-mySin = notImplementedYet
+mySin x = let nx = normalize x in taylor nx nx 1 0 1e-6
 
 -- косинус числа (формула Тейлора)
 myCos :: Double -> Double
-myCos = notImplementedYet
+myCos x = taylor (normalize x) 1 0 0 1e-6
 
 -- наибольший общий делитель двух чисел
 myGCD :: Integer -> Integer -> Integer
@@ -57,8 +65,9 @@ type Point2D = (Double, Double)
 -- рассчитайте площадь многоугольника по формуле Гаусса
 -- многоугольник задан списком координат
 shapeArea :: [Point2D] -> Double
---shapeArea points = notImplementedYet
-shapeArea points = notImplementedYet
+shapeArea points =
+  let f (a,b) (c,d) = a*d - b*c
+  in abs (sum $ zipWith f points $ tail $ cycle points) / 2
 
 -- треугольник задан длиной трёх своих сторон.
 -- функция должна вернуть
